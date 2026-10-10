@@ -65,3 +65,101 @@ const BDT=BDD.grid.tile;
 const BDW=BDD.grid.cols*BDT,BDH=BDD.grid.rows*BDT;
 const BD_ROAD_C0=(BDD.grid.cols-BDD.road.cols)/2,BD_ROAD_C1=BD_ROAD_C0+BDD.road.cols-1;
 const BD_CORE_R=BDD.grid.rows-BDD.core.h;
+
+/* ---- build bar and panel ---- */
+BDD.ui={barW:160,barTop:122,rowH:22,tabH:22,panelW:200,fullWallIds:['wood','stone','iron','crystal']};
+
+/* ---- ground turret effects ---- */
+BDD.turrets.pistol.flash=.06;        /* muzzle flash seconds */
+BDD.turrets.pistol.tracer=.08;       /* tracer line life, seconds */
+BDD.turrets.pistol.tracerW=1.5;      /* tracer width px */
+
+BDD.turrets.mg.flash=.05;
+BDD.turrets.mg.tracer=.05;
+BDD.turrets.mg.tracerW=1.2;
+
+BDD.turrets.flame.flash=.05;
+BDD.turrets.flame.burnDps=5;         /* burn damage per second once set alight (e.bd) */
+BDD.turrets.flame.puffRate=30;       /* flame puffs spawned per second while firing */
+BDD.turrets.flame.puffLife=.45;      /* seconds */
+BDD.turrets.flame.puffSpeed=40;      /* px/s outward drift */
+BDD.turrets.flame.puffSz=9;          /* glow half-size px before random spread */
+BDD.turrets.flame.maxFx=400;         /* cap on live effects, puffs stop spawning past this */
+
+BDD.turrets.laser.flash=.1;
+BDD.turrets.laser.beamLife=.15;      /* beam fade time, seconds */
+BDD.turrets.laser.beamW=4;           /* beam core width px */
+
+BDD.turrets.freeze.pulseHz=1;        /* ring pulse cycles per second */
+BDD.turrets.freeze.ringAlpha=.2;     /* peak ring opacity */
+BDD.turrets.freeze.ringW=2;          /* ring line width px */
+
+BDD.turrets.tesla.flash=.05;
+BDD.turrets.tesla.jump=3;            /* max chain jump, tiles, from one hit to the next */
+BDD.turrets.tesla.seg=.5;            /* bolt segment length, tiles */
+BDD.turrets.tesla.jag=7;             /* bolt jitter px */
+BDD.turrets.tesla.boltLife=.12;      /* seconds, fades quickly */
+BDD.turrets.tesla.boltW=2.5;
+
+BDD.turrets.sniper.flash=.12;
+BDD.turrets.sniper.tracer=.25;       /* long tracer life, seconds */
+BDD.turrets.sniper.tracerW=3;
+
+BDD.turrets.acid.flash=.06;
+BDD.turrets.acid.lobTime=.5;         /* flight time of the lob, seconds */
+BDD.turrets.acid.lobArc=40;          /* lob height px */
+BDD.turrets.acid.lobSize=5;          /* lob glow half-size px */
+BDD.turrets.acid.fade=.6;            /* puddle fades over its last N seconds */
+BDD.turrets.acid.alpha=.35;          /* puddle opacity */
+BDD.turrets.acid.bubbles=6;
+BDD.turrets.acid.bubbleR=2;          /* bubble radius px */
+BDD.turrets.acid.bubbleRate=.6;      /* bubble rises per second */
+
+/* ---- air turrets and missiles ---- */
+/* air: shared effect and homing numbers. Times in seconds, distances in px unless named tiles. Per-turret damage, rate, range and splash stay in BDD.turrets. */
+BDD.air={
+  flashT:.1,            /* muzzle flash and tracer time after a shot */
+  maxInFlight:150,      /* cap on homing missiles alive at once */
+  smokeEvery:.05,       /* seconds between smoke puffs from a missile */
+  boomRing:22,          /* minimum visual radius of an impact ring, px */
+  ringMul:1.5,          /* impact ring radius = detonation radius * ringMul, when larger than boomRing */
+  boomShake:1.5,        /* screen shake on impact */
+  homing:{seekRange:14},/* tiles: a missile with no target looks for one this close */
+  flak:{splashMul:.5,puff:6,puffSpd:140},  /* other flyers in the burst take this share of the shot's damage */
+  seeker:{hitR:4,launch:170,spd:430,turn:6,life:3.2,spread:.35},  /* hitR: direct-hit radius px, launch: start speed px/s, spd: cruise px/s, turn: rad/s, life: s, spread: rad between missiles */
+  missile:{hitR:4,launch:150,spd:360,turn:4.2,life:3.8,spread:.22}
+};
+
+/* ---- cables ---- */
+/* BDD.cable.cost (crystals per tile) lives in bd-data.js. Everything else cable-related is here. */
+Object.assign(BDD.cable,{
+  col:'#5dffa0',        /* cable, ring and link colour */
+  badCol:'#ff4d6d',     /* drag cursor once crystals ran out */
+  recomputeEvery:.25,   /* seconds between network rebuilds (also rebuilt on any change) */
+  breakFx:6,            /* particles when a ground enemy cuts a tile */
+  lineW:3,              /* cable core line width, px */
+  glowW:9,              /* cable glow line width, px */
+  glowAlpha:.18,        /* cable glow alpha */
+  dotR:3,               /* cable dot radius, px */
+  ringR:9,              /* connection ring radius, px */
+  ringW:2,              /* ring and drag cursor line width, px */
+  linkAlpha:.3,         /* station to network link alpha */
+  linkDash:[4,5]        /* station to network link dash pattern, px */
+});
+
+/* ---- energy skills ---- */
+BDD.skills.shockwave.ringLife=.35;          /* s the push ring stays visible */
+BDD.skills.overcharge.excludeTypes=['spikeTrap','repair'];   /* turret ids that do not lose HP to overcharge */
+BDD.skills.mend.ringLife=.45;               /* s the green pulse ring lasts */
+BDD.skills.barrage.stagger=1.5;             /* s over which all rockets are launched */
+BDD.skills.barrage.fall=.5;                 /* s from launch to impact for one rocket */
+BDD.skills.barrage.zoneMargin=3;            /* tiles beside the road the rockets may land on */
+BDD.skills.barrage.rocketH=230;             /* px, visual height a rocket falls from */
+BDD.skillFx={
+  txtLife:.9,txtRise:36,txtFont:'bold 14px "Chakra Petch",sans-serif',
+  cGood:'93,255,160',cBad:'255,120,120',cFire:'120,230,255',cRocket:'255,110,50',cObs:'181,123,255'
+};
+
+/* ---- Sovereign ---- */
+/* Sovereign: speed back up the road while pushed by the Shockwave skill, px/s */
+BDD.boss.sovereign.pushSpeed=90;
