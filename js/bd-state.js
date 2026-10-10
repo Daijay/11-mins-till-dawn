@@ -11,6 +11,13 @@ BD_CORE.cx=BD_CORE.x+BD_CORE.w/2;BD_CORE.cy=BD_CORE.y+BD_CORE.h/2;
 /* road bounds in px */
 const BD_ROAD={x0:BD_ROAD_C0*BDT,x1:(BD_ROAD_C1+1)*BDT};
 
+/* Registries that feature files fill in. Load order is irrelevant, they are only read at runtime.
+   BDTUR[id](b,dt)   per-frame logic for a turret type
+   BDFX.push((sx,sy)=>draw)   world-space effects (projectiles, beams, puddles) drawn above buildings
+   BDUPD.push(dt=>step)       per-frame systems that are not tied to one building */
+const BDTUR={},BDFX=[],BDUPD=[];
+const mouseWX=()=>mouse.x-W/2+camX(),mouseWY=()=>mouse.y-H/2+camY();
+
 function newGameBD(wk,timed){
   newGame(wk);
   const p=G.p;p.x=BD_CORE.cx;p.y=BD_CORE.y-70;
@@ -22,8 +29,8 @@ function newGameBD(wk,timed){
     incomeT:BDD.eco.incomeEvery,
     uid:0,buildings:[],tiles:new Map(),cables:new Map(),remnants:[],
     core:{hp:BDD.core.hp,max:BDD.core.hp,fl:0},
-    cr:[],crates:[],puddles:[],mis:[],
-    sel:null,barMin:false,
+    cr:[],crates:[],ocT:0,
+    sel:null,barMin:false,hover:null,
     dead:false,respawnT:0,over:false,sovDead:false,score:0
   };
   G.state='play';

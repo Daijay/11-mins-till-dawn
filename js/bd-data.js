@@ -28,19 +28,19 @@ const BDD={
   fullWallDiscount:.05,
   /* turrets. hits: ground | air | both | support. ramp/reset only on the machine gun */
   turrets:{
-    pistol:{name:'Pistol turret',w:1,h:1,hits:'ground',cost:15,hp:150,range:6,dmg:6,rate:2,col:'#9fb4d8'},
-    mg:{name:'Machine Gun',w:2,h:2,hits:'ground',cost:60,hp:260,range:7,dmg:5,rate:3,rateMax:12,ramp:4,reset:1.5,col:'#ffd166'},
-    flame:{name:'Flame turret',w:2,h:2,hits:'ground',cost:70,hp:280,range:3.5,dps:70,cone:.5,burn:2.5,col:'#ff7a2e'},
-    laser:{name:'Laser turret',w:2,h:2,hits:'ground',cost:110,hp:260,range:9,dmg:90,every:1.4,col:'#ff4d6d'},
-    freeze:{name:'Freeze turret',w:2,h:2,hits:'ground',cost:60,hp:250,range:4,dps:6,slow:.4,slowFor:2,col:'#8fe9ff'},
-    tesla:{name:'Tesla coil',w:2,h:2,hits:'ground',cost:130,hp:300,range:5,dmg:35,chain:3,falloff:.7,rate:1.1,col:'#b57bff'},
-    sniper:{name:'Sniper tower',w:2,h:2,hits:'ground',cost:150,hp:220,range:14,dmg:220,every:2.2,target:'highestHp',col:'#e8f7ff'},
-    missile:{name:'Missile battery',w:3,h:2,hits:'both',cost:170,hp:300,range:9,missiles:4,dmg:25,every:2.6,splash:.9,col:'#ff9a3c'},
-    acid:{name:'Acid sprayer',w:2,h:2,hits:'ground',cost:90,hp:260,range:6,puddle:3,puddleFor:6,dps:20,every:5,col:'#c8ff3d'},
-    flak:{name:'Flak',w:1,h:1,hits:'air',cost:90,hp:180,range:8,dmg:12,rate:4,splash:.8,col:'#ffe29a'},
-    seeker:{name:'Seeker Missiles',w:2,h:2,hits:'air',cost:120,hp:260,range:11,missiles:2,dmg:30,every:1.6,col:'#7fffd4'},
-    spikeTrap:{name:'Spike trap',w:2,h:2,hits:'ground',cost:25,hp:150,dps:18,roadOnly:true,col:'#d9dde8'},
-    repair:{name:'Repair Station',w:2,h:2,hits:'support',cost:120,hp:200,heal:12,col:'#5dffa0'}
+    pistol:{up:'rate',name:'Pistol turret',w:1,h:1,hits:'ground',cost:15,hp:150,range:6,dmg:6,rate:2,col:'#9fb4d8'},
+    mg:{up:'rate',name:'Machine Gun',w:2,h:2,hits:'ground',cost:60,hp:260,range:7,dmg:5,rate:3,rateMax:12,ramp:4,reset:1.5,col:'#ffd166'},
+    flame:{up:'dmg',name:'Flame turret',w:2,h:2,hits:'ground',cost:70,hp:280,range:3.5,dps:70,cone:.5,burn:2.5,col:'#ff7a2e'},
+    laser:{up:'dmg',name:'Laser turret',w:2,h:2,hits:'ground',cost:110,hp:260,range:9,dmg:90,every:1.4,col:'#ff4d6d'},
+    freeze:{up:'dmg',name:'Freeze turret',w:2,h:2,hits:'ground',cost:60,hp:250,range:4,dps:6,slow:.4,slowFor:2,col:'#8fe9ff'},
+    tesla:{up:'rate',name:'Tesla coil',w:2,h:2,hits:'ground',cost:130,hp:300,range:5,dmg:35,chain:3,falloff:.7,rate:1.1,col:'#b57bff'},
+    sniper:{up:'dmg',name:'Sniper tower',w:2,h:2,hits:'ground',cost:150,hp:220,range:14,dmg:220,every:2.2,target:'highestHp',col:'#e8f7ff'},
+    missile:{up:'rate',name:'Missile battery',w:3,h:2,hits:'both',cost:170,hp:300,range:9,missiles:4,dmg:25,every:2.6,splash:.9,col:'#ff9a3c'},
+    acid:{up:'dmg',name:'Acid sprayer',w:2,h:2,hits:'ground',cost:90,hp:260,range:6,puddle:3,puddleFor:6,dps:20,every:5,col:'#c8ff3d'},
+    flak:{up:'rate',name:'Flak',w:1,h:1,hits:'air',cost:90,hp:180,range:8,dmg:12,rate:4,splash:.8,col:'#ffe29a'},
+    seeker:{up:'rate',name:'Seeker Missiles',w:2,h:2,hits:'air',cost:120,hp:260,range:11,missiles:2,dmg:30,every:1.6,col:'#7fffd4'},
+    spikeTrap:{up:'dmg',name:'Spike trap',w:2,h:2,hits:'ground',cost:25,hp:150,dps:18,roadOnly:true,col:'#d9dde8'},
+    repair:{up:'dmg',name:'Repair Station',w:2,h:2,hits:'support',cost:120,hp:200,heal:12,col:'#5dffa0'}
   },
   cable:{cost:1},
   /* energy skills. Select in the hotbar, then use the mouse */

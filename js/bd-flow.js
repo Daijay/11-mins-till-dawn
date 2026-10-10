@@ -12,8 +12,9 @@ function bdUpdate(dt){
   for(const b of B.buildings)b.fl=Math.max(0,b.fl-dt);
   bdPickups(dt);
   bdEnemyShots();
-  if(typeof bdTurrets==='function')bdTurrets(dt);
-  if(typeof bdSystems==='function')bdSystems(dt);
+  B.ocT=Math.max(0,B.ocT-dt);
+  bdTurrets(dt);
+  for(const f of BDUPD)f(dt);
   /* respawn */
   if(B.dead){
     B.respawnT-=dt;

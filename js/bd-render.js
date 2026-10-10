@@ -62,9 +62,8 @@ function bdDrawWorld(sx,sy){
     ctx.strokeStyle='rgba(255,179,107,.75)';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.strokeRect(x+2,y+2,w-4,h-4);ctx.setLineDash([]);
     ctx.fillStyle='rgba(255,179,107,.12)';ctx.fillRect(x+2,y+2,w-4,h-4);
   }
-  if(typeof bdDrawPuddles==='function')bdDrawPuddles(sx,sy);
   for(const b of B.buildings)bdDrawBuilding(b,sx,sy);
-  if(typeof bdDrawEffects==='function')bdDrawEffects(sx,sy);
+  for(const f of BDFX)f(sx,sy);
   /* crystals and energy crates */
   for(const c of B.cr){
     const x=sx(c.x),y=sy(c.y);if(y<-20||y>H+20)continue;

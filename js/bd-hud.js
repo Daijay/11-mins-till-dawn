@@ -27,6 +27,7 @@ function bdDrawHud(){
     ctx.font='500 10px "Chakra Petch",sans-serif';ctx.fillStyle='#9aa4d6';
     ctx.fillText(B.timed?fmt(B.clock)+' / '+fmt(DUR)+' WAVE CLOCK':'ENDLESS  SCORE '+(Math.max(0,B.wave-1)+G.kills),bx,H-20);
   }
+  if(typeof bdDrawBar==='function')bdDrawBar();
   if(B.dead){
     ctx.font='700 30px "Chakra Petch",sans-serif';ctx.fillStyle='#ff6b81';ctx.fillText('DOWN',W/2,H/2-10);
     ctx.font='500 14px "Chakra Petch",sans-serif';ctx.fillStyle='#cfd6ff';ctx.fillText('Respawn in '+Math.ceil(B.respawnT)+'s',W/2,H/2+14);

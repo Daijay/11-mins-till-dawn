@@ -39,6 +39,7 @@ function beam(a){
 function hurtEnemy(e,d,q,fa){
   if(e.dead)return;
   if(e.type==='super'&&!G.nr&&!G.bd)d*={rifle:.5,sniper:.55,flame:.6,boom:.5}[G.wk]||1;
+  if(e.type==='super'&&G.bd)d*=d<BDD.boss.sovereign.armour[0].below?1-BDD.boss.sovereign.armour[0].cut:1-BDD.boss.sovereign.armour[1].cut;
   if(e.type==='shielder'&&fa!==undefined){
     const sa=e.sa===undefined?e.ang:e.sa;
     let df=Math.abs(fa-sa)%6.283;if(df>3.1416)df=6.283-df;
