@@ -38,7 +38,7 @@ function beam(a){
 }
 function hurtEnemy(e,d,q,fa){
   if(e.dead)return;
-  if(e.type==='super'&&!G.nr)d*={rifle:.5,sniper:.55,flame:.6,boom:.5}[G.wk]||1;
+  if(e.type==='super'&&!G.nr&&!G.bd)d*={rifle:.5,sniper:.55,flame:.6,boom:.5}[G.wk]||1;
   if(e.type==='shielder'&&fa!==undefined){
     const sa=e.sa===undefined?e.ang:e.sa;
     let df=Math.abs(fa-sa)%6.283;if(df>3.1416)df=6.283-df;
@@ -47,9 +47,10 @@ function hurtEnemy(e,d,q,fa){
   e.hp-=d;if(!q)e.fl=.07;
   if(e.hp<=0){
     e.dead=true;G.kills++;
+    if(G.bd)bdOnKill(e);
     G.Gm.push({x:e.x,y:e.y,v:e.xp,r:e.xp>=6?6:e.xp>=3?5:4,vx:0,vy:0});
     const dr=(e.type==='boss'||e.type==='super')?1:e.type==='brute'?.25:(e.type==='shielder'||e.type==='mender')?.1:(e.type==='spitter'||e.type==='charger'||e.type==='splitter')?.05:.02;
-    if(Math.random()<dr&&G.PU.length<12)G.PU.push({x:e.x,y:e.y,t:e.type==='boss'?'gold':e.type==='super'?'heal':pickPU(),life:22});
+    if(!G.bd&&Math.random()<dr&&G.PU.length<12)G.PU.push({x:e.x,y:e.y,t:e.type==='boss'?'gold':e.type==='super'?'heal':pickPU(),life:22});
     burst(e.x,e.y,e.type==='brute'?18:7,e.col,150);
     if(e.type==='super')G.sovDead=true;
     if(e.type==='boss'||e.type==='super'){burst(e.x,e.y,e.type==='super'?60:36,'#ffe2a8',320);G.R.push({x:e.x,y:e.y,r:0,max:e.r*(e.type==='super'?3:2),t:0,life:.55,rgb:'255,226,168'});G.shake=Math.max(G.shake,e.type==='super'?16:10);}
@@ -58,8 +59,8 @@ function hurtEnemy(e,d,q,fa){
   }else if(!q)burst(e.x,e.y,2,'#ffffff',90);
 }
 function hurtPlayer(d){
-  const p=G.p;if(p.iframes>0||p.inv>0)return;
+  const p=G.p;if(p.iframes>0||p.inv>0||(G.bd&&G.bd.dead))return;
   p.hp-=d;p.iframes=.5;G.shake=7;burst(p.x,p.y,10,'#5be7ff',160);
-  if(p.hp<=0)finish(false);
+  if(p.hp<=0){if(G.bd)bdPlayerDied();else finish(false);}
 }
 

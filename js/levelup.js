@@ -9,7 +9,7 @@ function mkCard(parent,title,desc,tag,idx,onClick){
 }
 function openLevel(){
   G.state='levelup';mouse.down=false;
-  const pool=SKILLS.filter(s=>(G.lv[s.id]||0)<s.max&&(!s.only||s.only.indexOf(G.wk)>=0)&&(!s.need||G.p[s.need])&&!((G.w.beam||G.w.boom||G.w.fade)&&s.id==='pierce'));
+  const pool=SKILLS.filter(s=>(G.lv[s.id]||0)<s.max&&(!s.only||s.only.indexOf(G.wk)>=0)&&(!s.need||G.p[s.need])&&!((G.w.beam||G.w.boom||G.w.fade)&&s.id==='pierce')&&!(G.bd&&s.id==='nova'));
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   CH=pool.slice(0,3);
   const spc=pool.filter(s=>s.only);
@@ -26,6 +26,7 @@ function openLevel(){
 }
 function pick(s){
   if(G.state!=='levelup')return;
+  if(G.picks)G.picks.push(s.id);
   if(s.id!=='heal')G.lv[s.id]=(G.lv[s.id]||0)+1;
   s.fn(G.p);{const o=G.p.maxHp;G.p.maxHp=Math.round(o*1.04);G.p.hp+=G.p.maxHp-o;}G.pending--;
   if(G.pending>0)openLevel();else{$('lvl').hidden=true;G.state='play';}

@@ -1,5 +1,6 @@
 /* finish(): win/lose handling, best time, end screen. */
 function finish(win){
+  if(G.bd){bdFinish(win);return;}
   G.state=win?'win':'lose';
   const t=G.t;
   if(win){G.E.forEach(e=>{burst(e.x,e.y,5,'#ffe2a8',170);});G.E=[];G.B=[];G.t=DUR;}

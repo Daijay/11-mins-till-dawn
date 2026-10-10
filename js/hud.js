@@ -21,10 +21,12 @@ function drawHud(){
   ctx.textAlign='right';ctx.font='700 20px "Chakra Petch",sans-serif';ctx.fillStyle='#eef2ff';ctx.fillText(String(G.kills),W-22,40);
   ctx.font='500 11px "Chakra Petch",sans-serif';ctx.fillStyle='#9aa4d6';ctx.textAlign='left';ctx.fillText('KILLS',W-134,40);
   // clock
+  if(!G.bd){
   panel(W/2-70,H-62,140,48);
   ctx.textAlign='center';ctx.font='700 28px "Chakra Petch",sans-serif';ctx.fillStyle=G.t>DUR-60?'#ffb36b':'#eef2ff';
   ctx.fillText(fmt(DUR-G.t),W/2,H-32);
   ctx.font='500 10px "Chakra Petch",sans-serif';ctx.fillStyle='#9aa4d6';ctx.fillText('UNTIL DAWN',W/2,H-19);
+  }
   // xp
   ctx.fillStyle='rgba(5,8,25,.7)';ctx.fillRect(0,H-8,W,8);
   ctx.fillStyle='#7dffb2';ctx.fillRect(0,H-8,W*clamp(G.xp/xpNext(G.level),0,1),8);
@@ -52,7 +54,7 @@ function drawHud(){
   // boss health bars
   const bs=G.E.filter(e=>(e.type==='boss'||e.type==='super')&&!e.dead).slice(0,2);
   bs.forEach((b,i)=>{
-    const y=12+i*36,bw=400;
+    const y=(G.bd?52:12)+i*36,bw=400;
     panel(W/2-bw/2-8,y,bw+16,32);
     ctx.textAlign='left';ctx.font='700 12px "Chakra Petch",sans-serif';ctx.fillStyle=b.type==='super'?'#ff7bff':'#ff6b81';
     ctx.fillText(b.type==='super'?'THE SOVEREIGN':'COLOSSUS',W/2-bw/2,y+14);
@@ -60,7 +62,7 @@ function drawHud(){
     ctx.fillStyle='#2a1020';ctx.fillRect(W/2-bw/2,y+19,bw,8);
     ctx.fillStyle=b.type==='super'?'#c026d3':'#ff4d6d';ctx.fillRect(W/2-bw/2,y+19,bw*clamp(b.hp/b.max,0,1),8);
   });
-  const by0=12+bs.length*36;
+  const by0=(G.bd?52:12)+bs.length*36;
   // active buffs
   const bl=[];
   if(p.buffs.rate>0)bl.push(['FIRE RATE +20%',p.buffs.rate,'#ffb020']);

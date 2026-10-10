@@ -2,12 +2,13 @@
 /* ---------- update ---------- */
 function update(dt){
   const p=G.p;G.t+=dt;
-  if(G.t>=DUR){finish(true);return;}
+  if(!G.bd&&G.t>=DUR){finish(true);return;}
   // move
   let dx=(keys['d']||keys['arrowright']?1:0)-(keys['a']||keys['arrowleft']?1:0);
   let dy=(keys['s']||keys['arrowdown']?1:0)-(keys['w']||keys['arrowup']?1:0);
-  if(dx||dy){const l=Math.hypot(dx,dy);const sm=p.speed*(p.buffs.speed>0?1.35:1);p.x+=dx/l*sm*dt;p.y+=dy/l*sm*dt;}
-  p.aim=Math.atan2(mouse.y-H/2,mouse.x-W/2);
+  if(G.bd&&G.bd.dead)dx=dy=0;
+  if(dx||dy){const l=Math.hypot(dx,dy);const sm=p.speed*(p.buffs.speed>0?1.35:1);const ox=p.x,oy=p.y;p.x+=dx/l*sm*dt;p.y+=dy/l*sm*dt;if(G.bd)bdMovePlayer(ox,oy);}
+  p.aim=Math.atan2(mouse.y-pScrY(),mouse.x-pScrX());
   if(G.fence){
     const f=G.fence;
     if(f.R>f.target)f.R=Math.max(f.target,f.R-f.rate*dt);
@@ -37,7 +38,7 @@ function update(dt){
   // shoot
   p.held=mouse.down?p.held+dt:0;
   p.cd-=dt;
-  let want=mouse.down,aimA=p.aim;
+  let want=mouse.down&&!(G.bd&&G.bd.dead),aimA=p.aim;
   if(!want&&p.auto){
     let bd=520,ne=null;
     for(const e of G.E){if(e.dead)continue;const d=Math.hypot(e.x-p.x,e.y-p.y);if(d<bd){bd=d;ne=e;}}
@@ -46,6 +47,8 @@ function update(dt){
   if(want&&p.cd<=0&&!p.plasma){fire(aimA);const rp=p.mini?.25+.75*Math.min(1,p.held/p.rampT):1;p.cd+=1/(G.w.rate*p.rateMul*(p.mini?1.8:1)*(p.buffs.rate>0?1.2:1)*rp);if(p.cd<0)p.cd=0;}
   else if(!want&&p.cd<0)p.cd=0;
   // spawning
+  if(G.bd)bdUpdate(dt);
+  else{
   if(G.t<DUR-5){
     G.spawnAcc+=(1.5+(G.t/DUR)*13)*(G.sovDead?.35:1)*dt;
     while(G.spawnAcc>=1){G.spawnAcc-=1;if(G.E.length<380){
@@ -63,9 +66,11 @@ function update(dt){
   if(!G.b1&&G.t>=200){G.b1=1;spawnEdge('boss');G.banner={text:'Colossus',sub:'Boss',t:3};}
   if(!G.b2&&G.t>=400){G.b2=1;spawnEdge('boss');G.banner={text:'Colossus',sub:'Boss',t:3};}
   if(!G.b3&&G.t>=590){G.b3=1;spawnSuper();}
+  }
   if(G.banner){G.banner.t-=dt;if(G.banner.t<=0)G.banner=null;}
   // enemies
-  for(const e of G.E){
+  if(G.bd)bdEnemies(dt);
+  else for(const e of G.E){
     if(e.dead)continue;
     e.ang=Math.atan2(p.y-e.y,p.x-e.x);
     const d0=Math.hypot(p.x-e.x,p.y-e.y);
