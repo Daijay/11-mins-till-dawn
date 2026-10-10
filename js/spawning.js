@@ -1,5 +1,6 @@
 /* Enemy spawning, spawn weights, pickups, super boss. */
 function spawn(type,x,y){
+  if(G.bd){bdSpawn(type,x,y);return;}
   const T=TYPES[type],m=T.fixed?1:1+G.t/(DUR/2.8);
   G.E.push({id:++G.id,type,x,y,r:T.r,hp:T.hp*m,max:T.hp*m,spd:T.spd*(1+G.t/1300),dmg:T.dmg*(1+G.t/800),xp:T.xp,col:T.col,kx:0,ky:0,bt:0,fl:0,ang:0,sh:rand(2.5,5),kr:T.kr===undefined?1:T.kr,sm:5,fu:0,tp:rand(2,4),cdT:rand(1.5,3),st:'',wt:0,dt:0,da:0});
 }

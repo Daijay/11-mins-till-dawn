@@ -1,8 +1,8 @@
 # 11 Mins Till Dawn
 
-Single-player browser survival shooter on one HTML5 canvas. Survive 11 minutes (660s) of enemy waves, kill a super boss at the end, reach dawn. No build step, no dependencies, no framework.
+Single-player browser game on one HTML5 canvas with two modes. **Survive**: run and gun for 11 minutes (660s), kill a super boss, reach dawn. **Base Defence**: hold a core at the bottom of a one-screen road, build walls and turrets, kill the final boss. No build step, no dependencies, no framework.
 
-Split out of a single 1,142-line `11 Mins Till Dawn.html`. Behavior is unchanged; every original line lives in exactly one file below.
+Survive was split out of a single 1,142-line `11 Mins Till Dawn.html`. Base Defence was added on top and is gated behind `G.bd`, so Survive code paths are unchanged.
 
 ## Run it
 
@@ -29,11 +29,42 @@ js/
   menus.js        showStart(), weapon cards, revive, skip toggle, pause, fullscreen
   build.js        Minute 9:50 build picker (spend 28 points on upgrades, then start)
   main.js         Boot (idleState + showStart) and requestAnimationFrame loop
+  --- Base Defence (all gated behind G.bd) ---
+  bd-data.js      BDD: every cost, HP, rate, range, timing for the mode. Edit numbers here
+  bd-state.js     newGameBD(), grid helpers, building store (bdAdd/bdRemove/bdDamageB/bdDestroy), registries BDTUR/BDFX/BDUPD
+  bd-enemies.js   bdSpawn (per-wave scaling), ground AI on the road, flyers, bomber blast, kill drops
+  bd-flow.js      bdUpdate: income, build/wave phases, spawn stream, pickups, player collision, death + respawn, end screen
+  bd-render.js    road, core, buildings (BDART registry), remnants, crystals, crates
+  bd-hud.js       core HP, crystals, energy, phase/wave clock panel
+  bd-ui.js        hotbar, ghost preview, placement rules, full wall, building panel (upgrade/repair/sell), remnant rebuild
+  bd-turrets.js   bdStat/bdRange/bdTargets helpers and the per-frame dispatcher
+  bd-tur-ground.js pistol, mg, flame, laser, freeze, tesla, sniper, acid
+  bd-tur-air.js   flak, seeker, missile battery, homing missiles
+  bd-tur-art.js   BDART drawing for every wall, spike and turret
+  bd-cables.js    right-click drag cables, networks, Repair Station healing
+  bd-skills.js    five energy skills (shockwave, overcharge, mend, barrage, obsidian)
+  bd-boss.js      The Sovereign: crush, per-row wall holds, core break
 ```
+
+## Base Defence
+
+Pick **Base Defence** on the start screen, then **Timed** (11 min wave clock, Sovereign near the end) or **Endless** (no clock, Sovereign at wave 20, score = waves + kills, best saved in `localStorage` key `bd_best`), then a weapon.
+
+**Map.** 28x26 tiles of 40 px (1120x1040). The camera scrolls vertically only (`camY()` in state.js). Road is 6 tiles wide, rows 0..23, centred. Core is 3x3 at the bottom (cols 12..14, grid aligned so it sits half a tile left of the road centre).
+
+**Loop.** Build phase (25 s +1.5 s per wave) then a wave (30 s + 1 s per wave of streaming, 10+4 per wave enemies, HP +12% and damage +5% per wave). Building is allowed any time. The 11:00 clock (`G.bd.clock`) only runs during waves. Colossus every 5 waves. Death: 7 s respawn, drops half your XP bar and 15% crystals, loses the last 2 upgrade picks by replaying the rest (`bdLoseUpgrades`).
+
+**Controls.** Mouse picks and places. With a hotbar item selected, left click places; deselect (Esc or click the slot again) to fire your weapon. Shift + click on a wall type places a full wall. Right-click drag from a Repair Station draws its cable. Number keys select slots in the active group, Tab cycles groups, wheel cycles items, N skips the build phase. Click a building (nothing selected) for upgrade/repair/sell.
+
+**Hooks into Survive code** (all `if(G.bd)`): `update.js` (bdUpdate, bdEnemies, bdMovePlayer, aim uses pScrX/pScrY), `render.js` (camera + bdDraw* calls), `combat.js` (hurtEnemy kill hook, Sovereign armour, hurtPlayer death), `spawning.js` (spawn hands off to bdSpawn), `endgame.js` (finish -> bdFinish), `levelup.js` (records `G.picks`, drops the Shockwave card), `input.js` (bd pointer/key/wheel hooks), `menus.js` (mode picker).
+
+**Extending.** Turret: add to `BDD.turrets`, register `BDTUR[id]=(b,dt)=>{}`, art in `BDART[id]`. Per-frame system: `BDUPD.push(dt=>...)`. World-space effect: `BDFX.push((sx,sy)=>...)`. Skill: `BDD.skills` + a case in `bdSkillUse`/`bdSkillGhost`. Enemy: `TYPES` in data.js, wave unlock in `BDD.unlock`, behaviour in `bdGround`.
+
+**Decisions made while building** (not in the spec): ground enemies are blocked by walls, spikes, turrets and stations but not spike traps or cables; power-up drops (heal/rate/speed/invincible) are off in this mode, replaced by crystals and energy crates; crystal drops scale +6% per wave except the Colossus fixed 150; flyers are added on top of the wave count; a remnant rebuilds a fresh level 0 building for 85% of base cost; the Sovereign replaces a Colossus when both land on the same wave; the sky follows the wave clock, so Endless stays at dawn after 11 minutes of waves; the dawn tint, fog and motes work the same as Survive.
 
 ## How it works
 
-**Load order matters.** Scripts are plain classic scripts sharing one global scope (not ES modules, so it also works from `file://`). Top-level code runs at load, so a file may only use things defined in files above it at load time. Functions are only called later, so cross-file calls inside functions are fine. Order is: core, data, assets, state, spawning, combat, endgame, update, levelup, render, hud, input, menus, build, main. If you add a file, add its `<script>` tag in `index.html` and respect that order.
+**Load order matters.** (Survive files first, then the bd-* files, then update/levelup/render/hud/input/menus/build/main; see index.html.) Scripts are plain classic scripts sharing one global scope (not ES modules, so it also works from `file://`). Top-level code runs at load, so a file may only use things defined in files above it at load time. Functions are only called later, so cross-file calls inside functions are fine. Order is: core, data, assets, state, spawning, combat, endgame, update, levelup, render, hud, input, menus, build, main. If you add a file, add its `<script>` tag in `index.html` and respect that order.
 
 **Single state object.** `G` (state.js) holds the whole run: `G.t` time, `G.p` player, `G.E` enemies, `G.B` player bullets and boomerangs, `G.EB` enemy shots, `G.BM` beams, `G.SH` lodged shells, `G.PU` pickups, `G.Gm` xp gems, `G.P` particles, `G.R` rings, `G.lv` upgrade levels, `G.state`. `newGame(weaponKey, skipBuild)` builds it. `G.state` is one of `menu`, `play`, `paused`, `levelup`, `win`, `lose`.
 
