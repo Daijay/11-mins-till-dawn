@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>11 Mins Till Dawn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" aria-label="11 Mins Till Dawn game"></canvas>
+  <button class="pbtn" id="pbtn" type="button" hidden>Pause (Esc)</button>
+  <button class="pbtn" id="fbtn" type="button" style="right:132px">Fullscreen (F)</button>
+  <div class="ov" id="start"><div class="in">
+    <h1>11 Mins Till Dawn</h1>
+    <p>Eleven minutes of night. They come in waves and they do not stop. Hold out until dawn. With a minute left, something huge arrives.</p>
+    <div class="keys">Move WASD / arrows &middot; Aim mouse &middot; Hold click to fire &middot; P to pause</div>
+    <div class="cards" id="weapons"></div>
+    <p class="note">Drops: red plus heals 15%, bolt gives +20% fire rate for 15s, arrows give a speed boost for 10s, golden orb makes you invincible for 4.8s.</p>
+    <p class="note" id="best"></p>
+    <p class="note">Needs a keyboard and mouse.</p>
+    <button class="skipbtn" id="skip" type="button" aria-pressed="false">Start at minute 9:50: <span>OFF</span></button>
+    <p class="note" id="skipnote" hidden>Pick a weapon, then choose your own 28 upgrades. Next run starts at 9:50.</p>
+  </div></div>
+  <div class="ov" id="lvl" hidden><div class="in">
+    <h2>Level up</h2>
+    <div class="cards" id="choices"></div>
+    <p class="note">Click a card or press 1, 2, 3</p>
+  </div></div>
+  <div class="ov" id="build" hidden><div class="in">
+    <h2>Pick your 28 upgrades</h2>
+    <p>Points left: <b id="buildLeft">28</b></p>
+    <div class="blist" id="buildList"></div>
+    <div class="bact">
+      <button class="skipbtn" id="bBack" type="button">Back</button>
+      <button class="skipbtn" id="bReset" type="button">Reset</button>
+      <button class="skipbtn" id="bRand" type="button">Fill evenly</button>
+      <button class="skipbtn go" id="bGo" type="button">Start at 9:50</button>
+    </div>
+  </div></div>
+  <div class="ov" id="pause" hidden><div class="in">
+    <h2>Paused</h2>
+    <div class="cards">
+      <button class="card" id="resume" type="button"><strong>Resume</strong><span>Esc or P also works.</span></button>
+      <button class="card" id="quit" type="button"><strong>Quit to menu</strong><span>Ends this run.</span></button>
+    </div>
+  </div></div>
+  <div class="ov" id="end" hidden><div class="in">
+    <h1 id="endTitle"></h1>
+    <p id="endSub"></p>
+    <div class="stats" id="endStats"></div>
+    <p id="endNote" hidden style="margin:0;font-size:13px;color:var(--muted);max-width:420px"></p>
+    <div class="cards"><button class="card" id="revive" type="button" hidden><strong>Revive here</strong><span>Back up right where you fell. 80% health and 2.5s of invincibility.</span></button><button class="card" id="again" type="button"><strong>Play again</strong><span>Pick a weapon and go.</span></button></div>
+  </div></div>
+</div>
+<!-- Classic scripts, order matters: they share one global scope. See CLAUDE.md. -->
+<script src="js/core.js"></script>
+<script src="js/data.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/state.js"></script>
+<script src="js/spawning.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/endgame.js"></script>
+<script src="js/update.js"></script>
+<script src="js/levelup.js"></script>
+<script src="js/render.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/input.js"></script>
+<script src="js/menus.js"></script>
+<script src="js/build.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
