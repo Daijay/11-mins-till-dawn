@@ -79,7 +79,7 @@ function bdStartWave(){
   }
   if(boss==='super')B.sovSpawned=true;
   if(boss){
-    const x=boss==='super'?BD_CORE.cx:BD_CORE.cx+rand(-40,40);
+    const rc=(BD_ROAD.x0+BD_ROAD.x1)/2,x=boss==='super'?rc:rc+rand(-40,40);
     spawn(boss,x,boss==='super'?-BDD.boss.sovereign.r:-60);
     G.banner={text:boss==='super'?'The Sovereign':'Colossus',sub:'Boss',t:4};
   }else G.banner={text:'Wave '+w,sub:'Wave',t:2.4};
